@@ -1,7 +1,8 @@
 # Manual_Telegram_Bot
 
 1. Introducción
-WilBot es un bot de Telegram creado para administrar grupos de forma automática. Fue desarrollado en Python usando la librería python-telegram-bot y permite moderar miembros, dar bienvenidas automáticas y responder mensajes de texto sin necesidad de intervención manual.
+WilBot es un bot de Telegram creado para administrar grupos de forma automática. Fue desarrollado en Python usando la librería python-telegram-bot y 
+permite moderar miembros, dar bienvenidas automáticas y responder mensajes de texto sin necesidad de intervención manual.
 
 2. Requisitos
 Antes de correr el bot necesitas tener instalado:
