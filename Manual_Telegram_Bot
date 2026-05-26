@@ -1,0 +1,117 @@
+# Manual_Telegram_Bot
+
+1. Introducción
+WilBot es un bot de Telegram creado para administrar grupos de forma automática. Fue desarrollado en Python usando la librería python-telegram-bot y permite moderar miembros, dar bienvenidas automáticas y responder mensajes de texto sin necesidad de intervención manual.
+
+2. Requisitos
+Antes de correr el bot necesitas tener instalado:
+Python 3.10 o superior
+Visual Studio Code (o cualquier editor)
+La librería python-telegram-bot
+
+Para instalar la librería abre la terminal y ejecuta:
+pip install python-telegram-bot
+
+3. Crear el Bot en @BotFather
+@BotFather es el bot oficial de Telegram para registrar nuevos bots. Sigue estos pasos:
+
+3.1 Crear el bot
+Abre Telegram y busca @BotFather
+Escribe /newbot
+Ponle un nombre al bot (ej. WilBot)
+Ponle un username que termine en 'bot' (ej. @Pako_uabc_bot)
+BotFather te dará un TOKEN — guárdalo, lo necesitas para el código
+
+3.2 Obtener el token
+Si ya tienes el bot creado y necesitas el token:
+Escribe /mybots en @BotFather
+Selecciona tu bot
+Toca 'API Token'
+
+IMPORTANTE: Nunca compartas tu token públicamente. Si lo expones, revócalo de inmediato en @BotFather → API Token → Revoke current token.
+
+4. Crear el Grupo en Telegram
+Abre Telegram → ícono de lápiz → 'Nuevo grupo'
+Agrega al menos un contacto para poder crearlo
+Ponle nombre al grupo y confírmalo
+Una vez creado, ve a la info del grupo → 'Agregar miembros'
+Busca tu bot por su @username y agrégalo
+Ve al perfil del bot dentro del grupo → 'Promover a administrador'
+Activa los permisos que necesites (eliminar mensajes, banear, invitar, etc.)
+
+5. El Código del Bot
+El bot está programado en Python en el archivo wilbot.py. A continuación se explica qué hace cada sección:
+
+5.1 Comandos disponibles
+Los comandos se usan escribiéndolos directamente en el grupo con el prefijo /:
+
+/start — El bot manda un saludo inicial
+/help — Muestra la lista de todos los comandos
+/info — Muestra el nombre, ID y número de miembros del grupo
+/ban — Banea al usuario del mensaje que se respondió
+/kick — Expulsa al usuario (puede volver a entrar)
+/mute — Silencia al usuario para que no pueda escribir
+/unmute — Le quita el silencio al usuario
+
+5.2 Cómo usar ban, kick, mute y unmute
+Estos comandos requieren responder el mensaje del usuario objetivo:
+Mantén presionado el mensaje del usuario
+Toca 'Responder'
+Escribe el comando (ej. /ban) y envíalo
+El bot identifica al usuario y ejecuta la acción
+
+5.3 Bienvenida automática
+Cuando un nuevo miembro entra al grupo, el bot detecta el evento automáticamente y manda un mensaje de bienvenida sin que nadie tenga que hacer nada.
+
+5.4 Respuestas a mensajes de texto
+El bot también responde mensajes sin necesidad de usar /. Reconoce frases como:
+'Hola', 'hey', 'buenas' → responde con un saludo
+'Cómo estás', 'qué onda' → responde que está listo para ayudar
+'En qué me puedes ayudar', 'qué puedes hacer' → muestra sus funciones
+'Gracias' → responde de nada
+
+6. Cómo Correr el Bot
+Para que el bot funcione, el script debe estar corriendo en tu computadora:
+
+Abre la terminal en VS Code
+Navega a la carpeta donde guardaste wilbot.py
+Ejecuta el siguiente comando:
+python wilbot.py
+Verás el mensaje 'Bot corriendo...' en la terminal
+El bot está activo mientras la terminal esté abierta
+
+NOTA: Si cierras VS Code o la terminal, el bot deja de funcionar. Para mantenerlo activo 24/7 se necesita un servidor externo.
+
+7. Integración con n8n
+n8n es una herramienta de automatización que permite mandar mensajes al grupo desde flujos externos usando la API de Telegram.
+
+7.1 Configuración del nodo HTTP Request en n8n
+Method: POST
+URL: https://api.telegram.org/bot<TOKEN>/sendMessage
+Send Body: activado
+Body Content Type: Form Urlencoded
+
+Body Fields:
+chat_id → ID del grupo (obtenlo con /info en el grupo)
+text → El mensaje que quieres enviar
+
+7.2 Importar con cURL
+En n8n puedes usar 'Import cURL' para configurar el nodo automáticamente pegando este comando:
+curl -X POST "https://api.telegram.org/bot<TOKEN>/sendMessage" -d chat_id=<CHAT_ID> -d text="Hola mundo"
+Sustituye <TOKEN> con tu token real y <CHAT_ID> con el ID de tu grupo.
+
+8. Solución de Problemas Comunes
+
+El bot no responde en el grupo
+Verifica que el script esté corriendo en la terminal
+Revisa que el bot sea administrador del grupo
+Asegúrate de que el token en el código sea el correcto
+
+Error 'Not Found' en n8n
+La URL tiene el token mal escrito o incompleto
+El método debe ser POST, no GET
+El chat_id debe ser negativo para grupos (ej. -5209230597)
+
+El token dejó de funcionar
+Abre @BotFather → /mybots → tu bot → API Token → Revoke current token
+Copia el nuevo token y actualiza el código
