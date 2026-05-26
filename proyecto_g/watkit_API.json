@@ -1,0 +1,151 @@
+{
+  "name": "watkit_API",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "pre-push\n"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -80,
+        -224
+      ],
+      "typeVersion": 1,
+      "id": "faf8f596-a16c-48ea-b71e-ba47bea8c5a2",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "github-push",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -48,
+        0
+      ],
+      "id": "557b4d1e-9e45-4796-80f2-2247a38b7c88",
+      "name": " Webhook_to_repository",
+      "webhookId": "c5711ea0-5d17-4a32-9572-6ac6956388b1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.telegram.org/bot8676436127:AAHinYgikGendklc2Z09U72Zrmxpq5fmUjM/sendMessage",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"chat_id\": \"-5209230597\",\n  \"text\": \"Nueva tarjeta: {{$json.action.data.card.name}}\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "96d605bf-6fd0-4bd7-b8fb-f4007ccfc796",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.resend.com/emails",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"from\": \"onboarding@resend.dev\",\n  \"to\": [\"hmaciel2004@gmail.com\"],\n  \"subject\": \"Nuevo commit en Watkit API\",\n  \"html\": \"<h2>Nuevo cambio en el repositorio</h2><p>Se detectó un nuevo push o commit en Watkit API.</p>\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "c16e5bd2-2ff9-4f08-9488-ddd7d4cc2bb3",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "5uly6mgvpK38O5bv",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "pXI8syWKWsCEF3DJ",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "id": "6a14e7cab19c72c38c8de8ac"
+      },
+      "type": "n8n-nodes-base.trelloTrigger",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        192
+      ],
+      "id": "c3463a01-f557-4bfa-aa86-b20e4ce206c7",
+      "name": "Trello Trigger",
+      "webhookId": "ae0877f3-bd10-438f-a12f-f5900c7fd3fd",
+      "credentials": {
+        "trelloApi": {
+          "id": "Oldy4rjE4Zu1y1F6",
+          "name": "Trello account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    " Webhook_to_repository": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trello Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "2329c1ac-99e4-43bb-ba3b-6a8911a5dc61",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d4788617edd11b6342f5469f8933f92bcb36286f2d5be2a17dc31976b54f78f1"
+  },
+  "id": "2a4yNCEkYEW4jBFV",
+  "tags": []
+}
